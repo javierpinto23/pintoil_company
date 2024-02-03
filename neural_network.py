@@ -74,4 +74,3 @@ class Pintoil_Model:
     def model_results(self,train_images_generator,test_images_generator,epochs=5,step_per_epochs=150, validation_step=10):
         results=self.model_architecture().fit_generator(train_images_generator=train_images_generator,epochs=epochs,step_per_epochs=step_per_epochs,validation_data=test_images_generator,validation_steps=validation_step)
         return results
-
