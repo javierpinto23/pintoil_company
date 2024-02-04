@@ -7,7 +7,7 @@ import numpy as np
 
 class Pintoil_Model:
 
-    def __init__(self,input_shape=(200,200,3), filters=33, kernel_size=(3,3), activation=['relu','sigmoid','softmax'], pool_size=(2,2),dense_layer_inter=60, dense_layer_output=2, layer_droupt=0.2):
+    def __init__(self,input_shape=(150,150,3), filters=32, kernel_size=(3,3), activation=['relu','sigmoid','softmax'], pool_size=(2,2),dense_layer_inter=128, dense_layer_output=1, layer_droupt=0.3):
         self.input_shape = input_shape
         self.filters = filters
         self.kernel_size = kernel_size
@@ -23,12 +23,13 @@ class Pintoil_Model:
         model.add(Conv2D(filters=self.filters,kernel_size=self.kernel_size,input_shape=self.input_shape,activation=self.activation[0]))
         model.add(MaxPool2D(pool_size=self.pool_size))
 
-        model.add(Conv2D(filters=self.filters, kernel_size=self.kernel_size, input_shape=self.input_shape,
+        model.add(Conv2D(filters=self.filters*2, kernel_size=self.kernel_size, input_shape=self.input_shape,
                          activation=self.activation[0]))
         model.add(MaxPool2D(pool_size=self.pool_size))
 
-        model.add(Conv2D(filters=self.filters, kernel_size=self.kernel_size, input_shape=self.input_shape,
+        model.add(Conv2D(filters=self.filters*2, kernel_size=self.kernel_size, input_shape=self.input_shape,
                          activation=self.activation[0]))
+
         model.add(MaxPool2D(pool_size=self.pool_size))
 
         model.add(Flatten())
@@ -39,7 +40,7 @@ class Pintoil_Model:
         model.add(Dropout(self.layer_droupt))
 
         model.add(Dense(self.dense_layer_output))
-        model.add(Activation(self.activation[0]))
+        model.add(Activation(self.activation[1]))
 
         model.compile(loss='binary_crossentropy',
                       optimizer='adam',
@@ -73,9 +74,9 @@ class Pintoil_Model:
         return image_generator_results
 
 
-    def model_results(self, train_images_generator, test_images_generator, epochs=5, step_per_epochs=10, validation_step=3):
+    def model_results(self, train_images_generator, test_images_generator, epochs=3, step_per_epochs=20, validation_step=12):
         model = self.model_architecture()
-        results=model.fit_generator(train_images_generator,epochs=epochs,steps_per_epoch=step_per_epochs,validation_data=test_images_generator,validation_steps=validation_step)
+        results = model.fit_generator(train_images_generator,epochs=epochs,steps_per_epoch=step_per_epochs,validation_data=test_images_generator,validation_steps=validation_step)
         return results
 
     def image_test_transformation(self, path):
